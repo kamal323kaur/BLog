@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Clean Blog - Start Bootstrap Theme</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body> 
+        <div class="container">
+            <h3 class="alert alert-success text-center mt-3">update Post</h3>
+            <form action ="" method = "post" id="contactform" data-sb-form-api-token>
+            {% csrf_token %}
+            <div class="form-floating">
+                <input class="form-control" name="tit" id="name" type="text" value="{{pt.title}}" placeholder="Enter your name..." data-sb-validations="required"/>
+        
+                <label for="title">TITLE</label>
+                <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control" name = "text" id="message" placeholder="Enter your message here..." style="height: 12rem" data-sb-validations="required">{{pt.text}}</textarea>
+                <label for="message">Text</label>
+                <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+            </div>
+            <br />
+            <!-- Submit success message-->
+            <!---->
+            <!-- This is what your users will see when the form-->
+            <!-- has successfully submitted-->
+            <div class="d-none" id="submitSuccessMessage">
+                <div class="text-center mb-3">
+                    <div class="fw-bolder">Form submission successful!</div>
+                    To activate this form, sign up at
+                    <br />
+                    <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                </div>
+            </div>
+            <!-- Submit error message-->
+            <!---->
+            <!-- This is what your users will see when there is-->
+            <!-- an error submitting the form-->
+            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
+            <!-- Submit Button-->
+            <input type = "submit" class="btn btn-primary text-uppercase" value = "update">
+            <a href="/" class="btn btn-primary">Back</a>
+        </form>
+    </div>
+</body>
+    </html>
+    
