@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <!-- Display post content -->
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<!-- Display comments -->
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+        <li>{{ comment.text }}</li>
+    {% endfor %}
+</ul>
+
+<!-- Comment form -->
+<h2>Add a Comment</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+<div class="comment">
+  <p>{{ comment.text }}</p>
+  <button class="like-button" data-comment-id="{{ comment.id }}">Like</button>
+  <span class="likes-count">{{ comment.like.count }}</span>
+</div>
+
+<p>{{ comment.content }}</p>
+{% if user.is_authenticated %}
+  {% if user in comment.like_set.all %}
+      <form action="{% url 'unlike_comment' comment.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Unlike</button>
+      </form>
+
+  {% endif %}
+{% else %}
+  <p><a href="{% url 'login' %}">Log in</a> to like this comment.</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
+

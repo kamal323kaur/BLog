@@ -1,21 +1,54 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from .models import *
+from django.core.paginator import Paginator
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from .forms import *
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
+    items_per_page = 5
     posts = Post.objects.all()
-    return render(request,'index.html',{'posts':posts})
-def nextt(request):
-    return render(request,'back.html',{})
-def about(request):
-    return render(request,'about.html',{})
-def contact(request):
-    return render(request,'contact.html',{})    
-def post(request):
-    return render(request,'post.html',{})
+    paginator = Paginator(posts, items_per_page)
+    page_number = request.GET.get('page')
+    current_page = paginator.get_page(page_number)
+    return render(request,'index.html',{'current_page': current_page})
+
+@login_required
+def comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = Comment.objects.filter(post=post)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = post
+            comment.save()
+            return redirect('comment', post_id=post_id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'post_detail.html', {'post': post, 'comments': comments, 'form': form})
+
+
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+    else:
+        comment.likes.add(request.user)
+
+    return redirect('comment_list') 
+
+  
+@login_required
 def createpost(request):
     if request.method == 'POST':
         title = request.POST.get("title")
@@ -23,11 +56,14 @@ def createpost(request):
         user = Post(author = request.user, title =title, text = text, published_date =timezone.now())
         user.save()
         return redirect("/")
-    return render(request,'contact.html',{})   
+    return render(request,'add_post.html',{})   
+@login_required
 def deletepost(request,id):
     usr = Post.objects.get(id = id)
     usr.delete()
-    return redirect("/")     
+    return redirect("/")  
+
+@login_required   
 def updatepost(request, id):
     pt = Post.objects.get(id = id)
     if request.method == 'POST':
@@ -62,3 +98,5 @@ def loginuser(request):
 def logoutuser(request):
     logout(request)
     return redirect('login')
+
+

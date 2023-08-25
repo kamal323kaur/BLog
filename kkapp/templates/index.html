@@ -28,9 +28,8 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'about' %}">About</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'post' %}">Sample Post</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'contact' %}">Add Post</a></li>
+                        
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url 'createpost' %}">Add Post</a></li>
                          
                         
                         {% if request.user.is_authenticated %}
@@ -67,10 +66,12 @@
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <!-- Post preview-->
-                    {% for post in posts %}
+                    {% for post in current_page %}
                     <div class="post-preview">
                        <a href="{% url 'deletepost' post.id%}" class="btn btn-danger btn-sm">delete</a>
                        <a href="{% url 'updatepost' post.id%}" class="btn btn-warning btn-sm">update</a>
+                       <a href="{% url 'comment' post.id%}" class="btn btn-warning btn-sm">comment</a>
+                      
                         <a href="#">
                             <h2 class="post-title">{{post.title}}</h2>
                  
@@ -85,50 +86,34 @@
                     <!-- Divider-->
                     <hr class="my-4" />
                     {% endfor %}
-                    <!-- Post preview-->
-                    <!--<div class="post-preview">
-                        <a href="post.html"><h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.</h2></a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Start Bootstrap</a>
-                            on September 18, 2022
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <!--<hr class="my-4" />
-                    <!-- Post preview-->
-                   <!--<div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Science has not yet mastered prophecy</h2>
-                            <h3 class="post-subtitle">We predict too much for the next year and yet far too little for the next ten.</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Start Bootstrap</a>
-                            on August 24, 2022
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <!--<!--<hr class="my-4" />
-                    <!-- Post preview-->
-                    <!--<div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Failure is not an option</h2>
-                            <h3 class="post-subtitle">Many say exploration is part of our destiny, but it’s actually our duty to future generations.</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Start Bootstrap</a>
-                            on July 8, 2022
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <!--<hr class="my-4" />
-                    <!-- Pager-->
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
-                </div>
+                    
+                
             </div>
         </div>
+        <!-- Display your paginated data -->
+{% for item in current_page %}
+<!-- Display item details -->
+{% endfor %}
+
+<!-- Display pagination links -->
+<!-- Display pagination links -->
+<div class="pagination">
+    <span class="step-links">
+        {% if current_page.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+             
+            <a href="?page={{ current_page.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current-page">{{ current_page.number }}</span>
+
+        {% if current_page.has_next %}
+            <a href="?page={{ current_page.next_page_number }}">next</a>
+            <a href="?page={{ current_page.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
         <!-- Footer-->
         <footer class="border-top">
             <div class="container px-4 px-lg-5">
